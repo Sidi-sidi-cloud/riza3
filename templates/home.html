@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTools - Strumenti per Docenti</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi_tool.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">EduTools</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/chatbot">Assistente Docente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/valutazione">Valutazione RIZA</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1 class="display-4 mb-4">Strumenti per Docenti</h1>
+                <p class="lead mb-5">Soluzioni intelligenti per supportare la tua attività didattica</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 tool-card">
+                    <div class="card-body text-center">
+                        <div class="tool-icon mb-3">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h3 class="card-title">Assistente Docente</h3>
+                        <p class="card-text">Un chatbot intelligente che risponde a tutte le tue domande professionali: dalla creazione di attività didattiche alla gestione della comunicazione con i genitori.</p>
+                        <a href="/chatbot" class="btn btn-primary mt-3">Accedi</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100 tool-card">
+                    <div class="card-body text-center">
+                        <div class="tool-icon mb-3">
+                            <i class="bi bi-clipboard-check-fill"></i>
+                        </div>
+                        <h3 class="card-title">Valutazione RIZA</h3>
+                        <p class="card-text">Strumento per la valutazione formativa basata sui processi RIZA. Inserisci le tue osservazioni e ricevi suggerimenti automatici per la classificazione.</p>
+                        <a href="/valutazione" class="btn btn-primary mt-3">Accedi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Come utilizzare EduTools</h4>
+                        <p class="card-text">EduTools è una suite di strumenti progettati per supportare i docenti nelle loro attività quotidiane:</p>
+                        <ul>
+                            <li><strong>Assistente Docente:</strong> Poni qualsiasi domanda relativa alla tua attività professionale e ricevi risposte immediate e pertinenti.</li>
+                            <li><strong>Valutazione RIZA:</strong> Inserisci le tue osservazioni sugli allievi e ottieni suggerimenti per la classificazione secondo il modello RIZA.</li>
+                        </ul>
+                        <p class="card-text">Tutti gli strumenti sono progettati per essere semplici e intuitivi, anche per chi non ha competenze tecniche avanzate.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">EduTools © 2025 - Strumenti per docenti basati su intelligenza artificiale</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"></script>
+    <script src="{{ url_for('static', filename='js/multi_tool.js') }}"></script>
+</body>
+</html>

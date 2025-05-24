@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduTools - Assistente Docente</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/multi_tool.css') }}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">EduTools</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/chatbot">Assistente Docente</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/valutazione">Valutazione RIZA</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="mb-4">Assistente Docente</h2>
+                <p class="lead mb-4">Poni qualsiasi domanda relativa alla tua attività di insegnamento e ricevi supporto immediato.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message bot-message">
+                                    <p>Ciao! Sono il tuo assistente per la didattica. Come posso aiutarti oggi?</p>
+                                </div>
+                            </div>
+                            
+                            <div class="suggestions" id="suggestions">
+                                <div class="suggestion-chip" onclick="selectSuggestion('Come posso creare un\'attività didattica coinvolgente sulla storia romana?')">Creare attività sulla storia romana</div>
+                                <div class="suggestion-chip" onclick="selectSuggestion('Come gestire un genitore che contesta una valutazione?')">Gestire contestazioni dei genitori</div>
+                                <div class="suggestion-chip" onclick="selectSuggestion('Quali strategie posso usare per motivare gli studenti disinteressati?')">Motivare studenti disinteressati</div>
+                            </div>
+                            
+                            <div class="chat-input">
+                                <textarea id="userInput" class="form-control" placeholder="Scrivi la tua domanda..." rows="2"></textarea>
+                                <button id="sendButton" class="btn btn-primary send-button">
+                                    <i class="bi bi-send-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Suggerimenti per l'uso</h5>
+                        <p>Puoi chiedere all'assistente informazioni su:</p>
+                        <ul>
+                            <li>Creazione di attività didattiche e materiali</li>
+                            <li>Strategie di insegnamento e metodologie</li>
+                            <li>Gestione della classe e problematiche comportamentali</li>
+                            <li>Comunicazione con genitori e colleghi</li>
+                            <li>Valutazione e feedback agli studenti</li>
+                            <li>Inclusione e personalizzazione dell'apprendimento</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer mt-5 py-3 bg-light">
+        <div class="container text-center">
+            <span class="text-muted">EduTools © 2025 - Strumenti per docenti basati su intelligenza artificiale</span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+</body>
+</html>

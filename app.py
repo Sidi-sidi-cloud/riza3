@@ -1,20 +1,20 @@
 import os
 import sqlite3
 import datetime
+import json
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import openai
-import json
 from dotenv import load_dotenv
 
 # Carica variabili d'ambiente
 load_dotenv()
 
 # Configurazione OpenAI
-# Usa la API Key da una variabile di ambiente
 openai.api_key = os.getenv("OPENAI_API_KEY")
+
 # Configurazione dell'applicazione
 DEBUG = os.environ.get("DEBUG", "False").lower() in ("true", "1", "t")
 SECRET_KEY = os.environ.get("SECRET_KEY", os.urandom(24))
@@ -243,11 +243,117 @@ def get_observations_for_student(allievo, disciplina=None):
     conn.close()
     return observations
 
+# Funzione per generare risposta del chatbot educativo
+def generate_chatbot_response(query):
+    if not ENABLE_AI:
+        return {
+            "response": "Mi dispiace, il servizio AI non è attualmente disponibile. Riprova più tardi.",
+            "suggestions": []
+        }
+    
+    try:
+        # Definisci il contesto per l'assistente docente
+        system_prompt = """
+        Sei un assistente specializzato per docenti e insegnanti. Il tuo compito è fornire supporto, consigli e risorse 
+        per aiutare gli educatori nel loro lavoro quotidiano. Rispondi in modo professionale ma amichevole, 
+        fornendo informazioni pratiche e basate su evidenze pedagogiche.
+
+        Puoi aiutare con:
+        - Creazione di attività didattiche e materiali
+        - Strategie di insegnamento e metodologie
+        - Gestione della classe e problematiche comportamentali
+        - Comunicazione con genitori e colleghi
+        - Valutazione e feedback agli studenti
+        - Inclusione e personalizzazione dell'apprendimento
+
+        Rispondi sempre in italiano e in modo conciso ma completo. Usa un linguaggio chiaro e accessibile.
+        Quando appropriato, struttura le risposte in punti per facilitarne la lettura.
+        """
+        
+        # Chiamata all'API di OpenAI
+        response = openai.chat.completions.create(
+            model=AI_MODEL,
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": query}
+            ],
+            max_tokens=MAX_TOKENS,
+            temperature=0.7
+        )
+        
+        # Estrai la risposta
+        bot_response = response.choices[0].message.content
+        
+        # Genera suggerimenti di follow-up basati sulla query e sulla risposta
+        followup_prompt = f"""
+        In base alla domanda dell'utente: "{query}" 
+        e alla tua risposta: "{bot_response}"
+        
+        Genera 3 possibili domande di follow-up che l'utente potrebbe voler fare per approfondire l'argomento.
+        Ogni domanda deve essere breve (massimo 10 parole) e pertinente.
+        Restituisci solo le domande in formato JSON come array di stringhe.
+        """
+        
+        followup_response = openai.chat.completions.create(
+            model=AI_MODEL,
+            messages=[
+                {"role": "system", "content": "Sei un assistente che genera suggerimenti di follow-up pertinenti."},
+                {"role": "user", "content": followup_prompt}
+            ],
+            max_tokens=200,
+            temperature=0.7,
+            response_format={"type": "json_object"}
+        )
+        
+        # Estrai i suggerimenti
+        suggestions_text = followup_response.choices[0].message.content
+        suggestions_data = json.loads(suggestions_text)
+        
+        # Assicurati che ci sia una lista di suggerimenti
+        suggestions = suggestions_data.get("domande", [])
+        if not suggestions and "suggerimenti" in suggestions_data:
+            suggestions = suggestions_data.get("suggerimenti", [])
+        
+        return {
+            "response": bot_response,
+            "suggestions": suggestions[:3]  # Limita a 3 suggerimenti
+        }
+        
+    except Exception as e:
+        print(f"Errore nella generazione della risposta del chatbot: {str(e)}")
+        return {
+            "response": "Mi dispiace, si è verificato un errore. Riprova più tardi.",
+            "suggestions": []
+        }
+
 # Route principale
 @app.route('/')
 def index():
+    return render_template('home.html')
+
+# Route per il chatbot
+@app.route('/chatbot')
+def chatbot():
+    return render_template('chatbot.html')
+
+# Route per la valutazione RIZA
+@app.route('/valutazione')
+def valutazione():
     discipline = get_discipline()
     return render_template('index.html', discipline=discipline)
+
+# Route per le query al chatbot
+@app.route('/chatbot_query', methods=['POST'])
+def chatbot_query():
+    data = request.json
+    query = data.get('query', '')
+    
+    if not query:
+        return jsonify({'error': 'Query mancante'}), 400
+    
+    # Genera la risposta del chatbot
+    response_data = generate_chatbot_response(query)
+    return jsonify(response_data)
 
 # Route per ottenere suggerimenti
 @app.route('/get_suggestions', methods=['POST'])
